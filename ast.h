@@ -10,8 +10,8 @@ class AST {
 public:
     AST() {}
     AST(Token *t) : token(t) {}
-    Token *token;
-    vector<AST *> children;
+    std::unique_ptr<Token> token;
+    vector<std::unique_ptr<AST>> children;
 };
 
 
