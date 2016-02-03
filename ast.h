@@ -3,6 +3,7 @@
 
 #include "token.h"
 #include <vector>
+#include <memory>
 
 using std::vector;
 
