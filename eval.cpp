@@ -1,56 +1,91 @@
 
 #include "eval.h"
+#include <iostream>
+#include <cmath>
 
 using namespace std;
 
-static map<string,int (*)(vector<int>)> functions;
+static map<string,Type* (*)(vector<Type *>)> functions;
 
-static int calcyAdd(vector<int> args) {
-    int sum = 0;
-    for (size_t i = 0; i < args.size(); i++)
-        sum += args.at(i);
-    return sum;
+static Type *calcyAdd(vector<Type *> args) {
+    bool doubles = false;
+    for (size_t i = 0; i < args.size(); i++) {
+        if (args.at(i)->type != CALCY_INT && args.at(i)->type != CALCY_DOUBLE) {
+            cout << "Incorrect argument type given to +" << endl;
+            return new TypeNothing();
+        }
+        if (args.at(i)->type == CALCY_DOUBLE)
+            doubles = true;
+    }
+    if (doubles) {
+        double sum = 0;
+        for (auto i = args.begin(); i != args.end(); i++) {
+            if ((*i)->type == CALCY_INT) {
+                TypeInt *n = dynamic_cast<TypeInt *>(*i);
+                sum += n->value;
+            }
+            if ((*i)->type == CALCY_DOUBLE) {
+                TypeDouble *n = dynamic_cast<TypeDouble *>(*i);
+                sum += n->value;
+            }
+        }
+        return new TypeDouble(sum);
+    } else {
+        int sum = 0;
+        for (auto i = args.begin(); i != args.end(); i++) {
+            TypeInt *n = dynamic_cast<TypeInt *>(*i);
+            sum += n->value;
+        }
+        return new TypeInt(sum);
+    }
 }
 
-static int calcySub(vector<int> args) {
-    int diff = 1;
-    for (size_t i = 0; i < args.size(); i++)
-        diff -= args.at(i);
-    return diff;
-}
+// static Type calcySub(vector<Type> args) {
+//     int diff = 1;
+//     for (size_t i = 0; i < args.size(); i++)
+//         diff -= args.at(i);
+//     return diff;
+// }
 
-static int calcyMult(vector<int> args) {
-    int prod = 1;
-    for (size_t i = 0; i < args.size(); i++)
-        prod *= args.at(i);
-    return prod;
-}
+// static Type calcyMult(vector<Type> args) {
+//     int prod = 1;
+//     for (size_t i = 0; i < args.size(); i++)
+//         prod *= args.at(i);
+//     return prod;
+// }
 
-static int calcyDiv(vector<int> args) {
-    int quot = args.at(0);
-    for (size_t i = 1; i < args.size(); i++)
-        quot /= args.at(i);
-    return quot;
-}
+// static Type calcyDiv(vector<Type> args) {
+//     int quot = args.at(0);
+//     for (size_t i = 1; i < args.size(); i++)
+//         quot /= args.at(i);
+//     return quot;
+// }
 
-static int calcyMod(vector<int> args) {
-    return args.at(0) % args.at(1);
-}
+// static Type calcyMod(vector<Type> args) {
+//     return args.at(0) % args.at(1);
+// }
+
+// static Type calcyExp(vector<Type> args) {
+//     return pow(args.at(0), args.at(1));
+// }
 
 void initializeBuiltins() {
     functions["+"] = calcyAdd;
-    functions["-"] = calcySub;
-    functions["*"] = calcyMult;
-    functions["/"] = calcyDiv;
-    functions["%"] = calcyMod;
+    // functions["-"] = calcySub;
+    // functions["*"] = calcyMult;
+    // functions["/"] = calcyDiv;
+    // functions["%"] = calcyMod;
+    // functions["^"] = calcyExp;
 }
 
-int eval(AST *ast) {
-    if (TkNum *t = dynamic_cast<TkNum*>(ast->token.get()))
-        return t->value;
-    vector<int> args;
+Type *eval(AST *ast) {
+    if (ast->token.get()->type != CALCY_ID) {
+        return ast->token.get();
+    }
+
+    vector<Type *> args;
     for (size_t i = 0; i < ast->children.size(); i++)
-        args.push_back(eval(ast->children.at(i).get()));
-    int result = (*functions[ast->token->toString()])(args);
+        args.emplace_back(eval(ast->children.at(i).get()));
+    Type *result = (*functions[ast->token->toString()])(args);
     return result;
 }

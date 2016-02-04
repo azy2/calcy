@@ -1,5 +1,5 @@
 #include <iostream>
-#include "token.h"
+#include "type.h"
 #include "ast.h"
 #include "parser.h"
 #include "eval.h"
@@ -12,8 +12,8 @@ int main() {
         string line;
         getline(cin, line);
         unique_ptr<AST> ast(parse(line));
-        int res = eval(ast.get());
-        cout << res << endl;
+        Type *res = eval(ast.get());
+        cout << res->toString() << endl;
     }
 
     return 0;

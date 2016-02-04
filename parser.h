@@ -6,7 +6,7 @@
 #include <regex>
 #include <iostream>
 #include <sstream>
-#include "token.h"
+#include "type.h"
 #include "ast.h"
 
 vector<string> tokenize(string s);

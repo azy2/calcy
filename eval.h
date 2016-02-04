@@ -6,12 +6,12 @@
 #include <vector>
 #include <memory>
 #include "ast.h"
-#include "token.h"
+#include "type.h"
 
 using namespace std;
 
 void initializeBuiltins();
 
-int eval(AST *ast);
+Type* eval(AST *ast);
 
 #endif

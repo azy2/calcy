@@ -1,7 +1,7 @@
 #ifndef AST_H
 #define AST_H
 
-#include "token.h"
+#include "type.h"
 #include <vector>
 #include <memory>
 
@@ -10,8 +10,8 @@ using std::vector;
 class AST {
 public:
     AST() {}
-    AST(Token *t) : token(t) {}
-    std::unique_ptr<Token> token;
+    AST(Type *t) : token(t) {}
+    std::unique_ptr<Type> token;
     vector<std::unique_ptr<AST>> children;
 };
 
