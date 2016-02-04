@@ -7,8 +7,7 @@
 
 using namespace std;
 
-BOOST_AUTO_TEST_CASE(universeInOrder)
+BOOST_AUTO_TEST_CASE(negatives)
 {
-    //   BOOST_CHECK(eval(parse("(+ 1 -1)")) == 0);
-    BOOST_CHECK(1 + 1 == 2);
+      BOOST_CHECK(eval(parse("(+ 1 -1)")) == 0);
 }
