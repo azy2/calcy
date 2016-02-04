@@ -55,13 +55,13 @@ AST *createAst(vector<string> tokens) {
     while (i < tokens.size()) {
         if (tokens.at(i).at(0) == '(')
             ast->children.emplace_back(createAst(tokenize(tokens.at(i))));
-        if (regex_match(tokens.at(i), identifier)) {
-            ast->children.emplace_back(new AST(new TkId(tokens.at(i))));
-        }
-        if (regex_match(tokens.at(i), number)) {
-            int x;
+        else if (regex_match(tokens.at(i), number)) {
+            int x = 0;
             stringstream(tokens.at(i)) >> x;
             ast->children.emplace_back(new AST(new TkNum(x)));
+        }
+        else if (regex_match(tokens.at(i), identifier)) {
+            ast->children.emplace_back(new AST(new TkId(tokens.at(i))));
         }
         i++;
     }
