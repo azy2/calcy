@@ -42,7 +42,7 @@ Type *makeType(string s) {
     regex boolean("\\#(t|f)");
     regex string("\"[^\"]*\"");
     regex character("\\\\[a-zA-Z0-9]");
-    regex identifier("[a-zA-Z\\+-/\\*%@\\$#&!^|]+[a-zA-Z0-9\\+-/\\*%@\\$#&!^|]*");
+    regex identifier("[a-zA-Z\\+-/\\*%@\\$#&!^|><=]+[a-zA-Z0-9\\+-/\\*%@\\$#&!^|<>=]*");
     if (regex_match(s, integer)) {
         cout << "Found integer " << s << endl;
         int x = 0;
@@ -65,7 +65,7 @@ Type *makeType(string s) {
     }
     else if (regex_match(s, character)) {
         cout << "Found character " << s << endl;
-        return new TypeChar(s.at(0));
+        return new TypeChar(s.at(1));
     }
     else if (regex_match(s, identifier)) {
         cout << "Found identifier " << s << endl;
